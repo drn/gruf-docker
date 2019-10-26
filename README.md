@@ -1,24 +1,33 @@
-# README
+# Gruf on Docker
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This simple project demonstrates an issue running a gruf with a Rails app using
+`bundle exec gruf` in a Docker container.
 
-Things you may want to cover:
+## Reproduction
 
-* Ruby version
+Running the process locally works:
 
-* System dependencies
+*Testing RPC*:
 
-* Configuration
+    grpcurl -plaintext \
+      -import-path app/proto \
+      -proto app/proto/Product.proto \
+      -d '{"id": 1}' \
+      0.0.0.0:50051 \
+      rpc.Products/GetProduct
 
-* Database creation
+When no gRPC server is running:
 
-* Database initialization
+> Failed to dial target host "0.0.0.0:50051": dial tcp 0.0.0.0:50051: connect: connection refused
 
-* How to run the test suite
+When gruf is running:
 
-* Services (job queues, cache servers, search engines, etc.)
+`bundle exec gruf`
 
-* Deployment instructions
+> ERROR:
+>   Code: Internal
+>   Message: No connection pool with 'primary' found.
 
-* ...
+When gruf is running in docker:
+
+`make`
